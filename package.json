@@ -5,7 +5,7 @@
   "main": "dist/class/main.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com:kmes/apiface.git"
+    "url": "https://github.com/kmes/apiface.git"
   },
   "scripts": {
     "build": "babel src/class --out-dir dist/class && browserify src/apiface.js -t babelify --outfile dist/apiface.js"
