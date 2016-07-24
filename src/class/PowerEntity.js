@@ -98,7 +98,7 @@ export default class PowerEntity {
                     });
                 }
 
-                promise.resolve( data );
+                promise.resolve( entity );
             })
             .catch(function({ response }) {
                 entity.setStatus( DATA_STATUS.error );
@@ -110,7 +110,7 @@ export default class PowerEntity {
                     });
                 }
 
-                promise.reject( response );
+                promise.reject( entity );
             });
 
         return promise.await;
@@ -148,7 +148,7 @@ export default class PowerEntity {
                         error: status
                     });
                 }
-                promise.reject( status );
+                promise.reject( entity );
                 break;
             case DATA_STATUS.synced :
                 if( eventsName.success ) {
@@ -157,7 +157,7 @@ export default class PowerEntity {
                         response: entity.getData()
                     });
                 }
-                promise.resolve( entity.getData() );
+                promise.resolve( entity );
                 break;
             case DATA_STATUS.created :
                 entityController.createData({ uri: entity.getUri(), data: entity.getData(), adapter: this.customAdapter, checkIfExist: this.safeMode })
@@ -170,7 +170,7 @@ export default class PowerEntity {
                                 response: response
                             });
                         }
-                        promise.resolve( data );
+                        promise.resolve( entity );
                     })
                     .catch(function({ response }) {
                         entity.setStatus( DATA_STATUS.error );
@@ -180,7 +180,7 @@ export default class PowerEntity {
                                 error: response
                             });
                         }
-                        promise.reject( response );
+                        promise.reject( entity );
                     });
                 break;
             case DATA_STATUS.modified :
@@ -194,7 +194,7 @@ export default class PowerEntity {
                                 response: response
                             });
                         }
-                        promise.resolve( data );
+                        promise.resolve( entity );
                     })
                     .catch(function({ response }) {
                         entity.setStatus( DATA_STATUS.error );
@@ -204,7 +204,7 @@ export default class PowerEntity {
                                 error: response
                             });
                         }
-                        promise.reject( response );
+                        promise.reject( entity );
                     });
                 break;
             case DATA_STATUS.added :
@@ -222,7 +222,7 @@ export default class PowerEntity {
                             });
                         }
 
-                        promise.resolve( data );
+                        promise.resolve( entity );
                     }.bind(this))
                     .catch(function({ response }) {
                         entity.setStatus( DATA_STATUS.error );
@@ -241,7 +241,7 @@ export default class PowerEntity {
                             });
                         }
 
-                        promise.reject( response );
+                        promise.reject( entity );
                     }.bind(this));
                 break;
             default :
@@ -283,7 +283,7 @@ export default class PowerEntity {
                     });
                 }
 
-                promise.resolve( data );
+                promise.resolve( entity );
             })
             .catch(function({ response }) {
                 entity.setStatus( DATA_STATUS.error );
@@ -295,7 +295,7 @@ export default class PowerEntity {
                     });
                 }
 
-                promise.reject( response );
+                promise.reject( entity );
             });
 
         return promise.await;

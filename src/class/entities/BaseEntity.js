@@ -82,9 +82,11 @@ export default class BaseEntity {
         this.data = data;
         this.setStatus( DATA_STATUS.modified );
         this.refreshUpdateAt();
+
+        return this.getData();
     }
 
-    addData( data ) {
+    pushData( data ) {
         if( !data ) return false;
         if( typeof this.data !== 'object' || typeof this.data.push !== 'function' ) {
             return false;
@@ -94,6 +96,18 @@ export default class BaseEntity {
 
         this.setStatus( DATA_STATUS.added );
         this.refreshUpdateAt();
+    }
+
+    get( field ) {
+        let data = this.getData();
+        return typeof data === 'object' ? data[ field ] : false;
+    }
+    set( field, value ) {
+        let data = this.getData();
+        if( typeof data !== 'object' ) return false;
+        data[ field ] = value;
+
+        return this.setData( data );
     }
 
 }

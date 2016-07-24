@@ -8,7 +8,7 @@ import PowerEntity from './PowerEntity';
 import { promiseFactory } from './helper/helper';
 
 export default class Apiface {
-    constructor({ adapter }) {
+    constructor({ adapter } = {}) {
         //this.defaultAdapter = adapter;
         this.setDefaultAdapter( adapter );
 
