@@ -18,6 +18,7 @@ export default class PowerEntity {
         }
     }
 
+
     getEntity() {
         return this.entity;
     }
@@ -35,6 +36,14 @@ export default class PowerEntity {
         return this.getEntity().getUpdateAt();
     }
 
+    get() {
+        let entity = this.getEntity();
+        return entity.get.apply( entity, arguments );
+    }
+    set() {
+        let entity = this.getEntity();
+        return entity.set.apply( entity, arguments );
+    }
     getData() {
         return this.getEntity().getData();
     }
