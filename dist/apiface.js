@@ -2726,7 +2726,6 @@ exports.default = AbstractHttpAdapter;
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AjaxAdapter = undefined;
 
 var _AjaxAdapter = require('./AjaxAdapter');
 
@@ -2736,7 +2735,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //import FirebaseAdapter from './FirebaseAdapter';
 
-exports.AjaxAdapter = _AjaxAdapter2.default;
+exports.default = { AjaxAdapter: _AjaxAdapter2.default };
 
 },{"./AjaxAdapter":31}],35:[function(require,module,exports){
 'use strict';
