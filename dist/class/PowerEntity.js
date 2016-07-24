@@ -63,6 +63,18 @@ var PowerEntity = function () {
             return this.getEntity().getUpdateAt();
         }
     }, {
+        key: 'get',
+        value: function get() {
+            var entity = this.getEntity();
+            return entity.get.apply(entity, arguments);
+        }
+    }, {
+        key: 'set',
+        value: function set() {
+            var entity = this.getEntity();
+            return entity.set.apply(entity, arguments);
+        }
+    }, {
         key: 'getData',
         value: function getData() {
             return this.getEntity().getData();

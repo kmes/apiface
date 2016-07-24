@@ -2067,8 +2067,8 @@ var Apiface = function () {
             });
         }
     }, {
-        key: 'getEntity',
-        value: function getEntity(_ref3) {
+        key: 'getPowerEntity',
+        value: function getPowerEntity(_ref3) {
             var name = _ref3.name;
             var uri = _ref3.uri;
             var fixedParams = _ref3.fixedParams;
@@ -2608,6 +2608,18 @@ var PowerEntity = function () {
         key: 'getUpdateAt',
         value: function getUpdateAt() {
             return this.getEntity().getUpdateAt();
+        }
+    }, {
+        key: 'get',
+        value: function get() {
+            var entity = this.getEntity();
+            return entity.get.apply(entity, arguments);
+        }
+    }, {
+        key: 'set',
+        value: function set() {
+            var entity = this.getEntity();
+            return entity.set.apply(entity, arguments);
         }
     }, {
         key: 'getData',

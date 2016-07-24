@@ -95,8 +95,8 @@ var Apiface = function () {
             });
         }
     }, {
-        key: 'getEntity',
-        value: function getEntity(_ref3) {
+        key: 'getPowerEntity',
+        value: function getPowerEntity(_ref3) {
             var name = _ref3.name;
             var uri = _ref3.uri;
             var fixedParams = _ref3.fixedParams;
