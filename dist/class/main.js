@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+exports.entities = exports.adapters = exports.PowerEntity = exports.EventManager = exports.EntityFactory = exports.EntityController = exports.EntityContainer = exports.Apiface = undefined;
 
 var _Apiface = require('./Apiface');
 
@@ -38,13 +39,11 @@ var _entities2 = _interopRequireDefault(_entities);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-exports.default = {
-    Apiface: _Apiface2.default,
-    EntityContainer: _EntityContainer2.default,
-    EntityController: _EntityController2.default,
-    EntityFactory: _EntityFactory2.default,
-    EventManager: _EventManager2.default,
-    PowerEntity: _PowerEntity2.default,
-    adapters: _adapters2.default,
-    entities: _entities2.default
-};
+exports.Apiface = _Apiface2.default;
+exports.EntityContainer = _EntityContainer2.default;
+exports.EntityController = _EntityController2.default;
+exports.EntityFactory = _EntityFactory2.default;
+exports.EventManager = _EventManager2.default;
+exports.PowerEntity = _PowerEntity2.default;
+exports.adapters = _adapters2.default;
+exports.entities = _entities2.default;
