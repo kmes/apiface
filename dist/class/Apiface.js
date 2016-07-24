@@ -33,20 +33,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Apiface = function () {
-    function Apiface(_ref) {
+    function Apiface() {
+        var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
         var adapter = _ref.adapter;
 
         _classCallCheck(this, Apiface);
 
-        this.defaultAdapter = adapter;
+        //this.defaultAdapter = adapter;
+        this.setDefaultAdapter(adapter);
 
         this.entityContainer = new _EntityContainer2.default({ entityFactory: new _EntityFactory2.default() });
 
-        this.entityController = new _EntityController2.default({ adapter: this.defaultAdapter });
+        this.entityController = new _EntityController2.default({ adapter: this.getDefaultAdapter() });
         this.eventManager = new _EventManager2.default();
     }
 
     _createClass(Apiface, [{
+        key: 'setDefaultAdapter',
+        value: function setDefaultAdapter(adapter) {
+            return this.defaultAdapter = adapter;
+        }
+    }, {
+        key: 'getDefaultAdapter',
+        value: function getDefaultAdapter() {
+            return this.defaultAdapter;
+        }
+    }, {
+        key: 'setAdapter',
+        value: function setAdapter(adapter) {
+            this.setDefaultAdapter(adapter);
+
+            this.entityController.setAdapter(this.getDefaultAdapter());
+        }
+    }, {
         key: 'getEntityContainer',
         value: function getEntityContainer() {
             return this.entityContainer;

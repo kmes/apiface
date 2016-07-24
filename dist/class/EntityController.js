@@ -14,7 +14,8 @@ var EntityController = function () {
 
         _classCallCheck(this, EntityController);
 
-        this.adapter = adapter;
+        //this.adapter = adapter;
+        this.setAdapter(adapter);
     }
 
     _createClass(EntityController, [{

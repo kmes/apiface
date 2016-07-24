@@ -2005,20 +2005,40 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Apiface = function () {
-    function Apiface(_ref) {
+    function Apiface() {
+        var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
         var adapter = _ref.adapter;
 
         _classCallCheck(this, Apiface);
 
-        this.defaultAdapter = adapter;
+        //this.defaultAdapter = adapter;
+        this.setDefaultAdapter(adapter);
 
         this.entityContainer = new _EntityContainer2.default({ entityFactory: new _EntityFactory2.default() });
 
-        this.entityController = new _EntityController2.default({ adapter: this.defaultAdapter });
+        this.entityController = new _EntityController2.default({ adapter: this.getDefaultAdapter() });
         this.eventManager = new _EventManager2.default();
     }
 
     _createClass(Apiface, [{
+        key: 'setDefaultAdapter',
+        value: function setDefaultAdapter(adapter) {
+            return this.defaultAdapter = adapter;
+        }
+    }, {
+        key: 'getDefaultAdapter',
+        value: function getDefaultAdapter() {
+            return this.defaultAdapter;
+        }
+    }, {
+        key: 'setAdapter',
+        value: function setAdapter(adapter) {
+            this.setDefaultAdapter(adapter);
+
+            this.entityController.setAdapter(this.getDefaultAdapter());
+        }
+    }, {
         key: 'getEntityContainer',
         value: function getEntityContainer() {
             return this.entityContainer;
@@ -2217,7 +2237,8 @@ var EntityController = function () {
 
         _classCallCheck(this, EntityController);
 
-        this.adapter = adapter;
+        //this.adapter = adapter;
+        this.setAdapter(adapter);
     }
 
     _createClass(EntityController, [{
@@ -2665,7 +2686,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.resolve(data);
+                promise.resolve(entity);
             }).catch(function (_ref3) {
                 var response = _ref3.response;
 
@@ -2678,7 +2699,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.reject(response);
+                promise.reject(entity);
             });
 
             return promise.await;
@@ -2719,7 +2740,7 @@ var PowerEntity = function () {
                             error: status
                         });
                     }
-                    promise.reject(status);
+                    promise.reject(entity);
                     break;
                 case _constants.DATA_STATUS.synced:
                     if (eventsName.success) {
@@ -2728,7 +2749,7 @@ var PowerEntity = function () {
                             response: entity.getData()
                         });
                     }
-                    promise.resolve(entity.getData());
+                    promise.resolve(entity);
                     break;
                 case _constants.DATA_STATUS.created:
                     entityController.createData({ uri: entity.getUri(), data: entity.getData(), adapter: this.customAdapter, checkIfExist: this.safeMode }).then(function (_ref4) {
@@ -2743,7 +2764,7 @@ var PowerEntity = function () {
                                 response: response
                             });
                         }
-                        promise.resolve(data);
+                        promise.resolve(entity);
                     }).catch(function (_ref5) {
                         var response = _ref5.response;
 
@@ -2754,7 +2775,7 @@ var PowerEntity = function () {
                                 error: response
                             });
                         }
-                        promise.reject(response);
+                        promise.reject(entity);
                     });
                     break;
                 case _constants.DATA_STATUS.modified:
@@ -2770,7 +2791,7 @@ var PowerEntity = function () {
                                 response: response
                             });
                         }
-                        promise.resolve(data);
+                        promise.resolve(entity);
                     }).catch(function (_ref7) {
                         var response = _ref7.response;
 
@@ -2781,7 +2802,7 @@ var PowerEntity = function () {
                                 error: response
                             });
                         }
-                        promise.reject(response);
+                        promise.reject(entity);
                     });
                     break;
                 case _constants.DATA_STATUS.added:
@@ -2801,7 +2822,7 @@ var PowerEntity = function () {
                             });
                         }
 
-                        promise.resolve(data);
+                        promise.resolve(entity);
                     }.bind(this)).catch(function (_ref9) {
                         var response = _ref9.response;
 
@@ -2842,7 +2863,7 @@ var PowerEntity = function () {
                             });
                         }
 
-                        promise.reject(response);
+                        promise.reject(entity);
                     }.bind(this));
                     break;
                 default:
@@ -2889,7 +2910,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.resolve(data);
+                promise.resolve(entity);
             }).catch(function (_ref11) {
                 var response = _ref11.response;
 
@@ -2902,7 +2923,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.reject(response);
+                promise.reject(entity);
             });
 
             return promise.await;
@@ -3690,10 +3711,12 @@ var BaseEntity = function () {
             this.data = data;
             this.setStatus(_constants.DATA_STATUS.modified);
             this.refreshUpdateAt();
+
+            return this.getData();
         }
     }, {
-        key: 'addData',
-        value: function addData(data) {
+        key: 'pushData',
+        value: function pushData(data) {
             if (!data) return false;
             if (_typeof(this.data) !== 'object' || typeof this.data.push !== 'function') {
                 return false;
@@ -3703,6 +3726,21 @@ var BaseEntity = function () {
 
             this.setStatus(_constants.DATA_STATUS.added);
             this.refreshUpdateAt();
+        }
+    }, {
+        key: 'get',
+        value: function get(field) {
+            var data = this.getData();
+            return (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? data[field] : false;
+        }
+    }, {
+        key: 'set',
+        value: function set(field, value) {
+            var data = this.getData();
+            if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) !== 'object') return false;
+            data[field] = value;
+
+            return this.setData(data);
         }
     }]);
 
@@ -3866,7 +3904,8 @@ var _entities2 = _interopRequireDefault(_entities);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-Object.assign(_Apiface2.default, {
+exports.default = {
+    Apiface: _Apiface2.default,
     EntityContainer: _EntityContainer2.default,
     EntityController: _EntityController2.default,
     EntityFactory: _EntityFactory2.default,
@@ -3874,8 +3913,6 @@ Object.assign(_Apiface2.default, {
     PowerEntity: _PowerEntity2.default,
     adapters: _adapters2.default,
     entities: _entities2.default
-});
-
-exports.default = _Apiface2.default;
+};
 
 },{"./Apiface":27,"./EntityContainer":28,"./EntityController":29,"./EntityFactory":30,"./EventManager":31,"./PowerEntity":32,"./adapters/adapters":37,"./entities/entities":40}]},{},[26]);

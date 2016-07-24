@@ -38,7 +38,8 @@ var _entities2 = _interopRequireDefault(_entities);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-Object.assign(_Apiface2.default, {
+exports.default = {
+    Apiface: _Apiface2.default,
     EntityContainer: _EntityContainer2.default,
     EntityController: _EntityController2.default,
     EntityFactory: _EntityFactory2.default,
@@ -46,6 +47,4 @@ Object.assign(_Apiface2.default, {
     PowerEntity: _PowerEntity2.default,
     adapters: _adapters2.default,
     entities: _entities2.default
-});
-
-exports.default = _Apiface2.default;
+};

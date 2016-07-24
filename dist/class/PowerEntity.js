@@ -139,7 +139,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.resolve(data);
+                promise.resolve(entity);
             }).catch(function (_ref3) {
                 var response = _ref3.response;
 
@@ -152,7 +152,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.reject(response);
+                promise.reject(entity);
             });
 
             return promise.await;
@@ -193,7 +193,7 @@ var PowerEntity = function () {
                             error: status
                         });
                     }
-                    promise.reject(status);
+                    promise.reject(entity);
                     break;
                 case _constants.DATA_STATUS.synced:
                     if (eventsName.success) {
@@ -202,7 +202,7 @@ var PowerEntity = function () {
                             response: entity.getData()
                         });
                     }
-                    promise.resolve(entity.getData());
+                    promise.resolve(entity);
                     break;
                 case _constants.DATA_STATUS.created:
                     entityController.createData({ uri: entity.getUri(), data: entity.getData(), adapter: this.customAdapter, checkIfExist: this.safeMode }).then(function (_ref4) {
@@ -217,7 +217,7 @@ var PowerEntity = function () {
                                 response: response
                             });
                         }
-                        promise.resolve(data);
+                        promise.resolve(entity);
                     }).catch(function (_ref5) {
                         var response = _ref5.response;
 
@@ -228,7 +228,7 @@ var PowerEntity = function () {
                                 error: response
                             });
                         }
-                        promise.reject(response);
+                        promise.reject(entity);
                     });
                     break;
                 case _constants.DATA_STATUS.modified:
@@ -244,7 +244,7 @@ var PowerEntity = function () {
                                 response: response
                             });
                         }
-                        promise.resolve(data);
+                        promise.resolve(entity);
                     }).catch(function (_ref7) {
                         var response = _ref7.response;
 
@@ -255,7 +255,7 @@ var PowerEntity = function () {
                                 error: response
                             });
                         }
-                        promise.reject(response);
+                        promise.reject(entity);
                     });
                     break;
                 case _constants.DATA_STATUS.added:
@@ -275,7 +275,7 @@ var PowerEntity = function () {
                             });
                         }
 
-                        promise.resolve(data);
+                        promise.resolve(entity);
                     }.bind(this)).catch(function (_ref9) {
                         var response = _ref9.response;
 
@@ -316,7 +316,7 @@ var PowerEntity = function () {
                             });
                         }
 
-                        promise.reject(response);
+                        promise.reject(entity);
                     }.bind(this));
                     break;
                 default:
@@ -363,7 +363,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.resolve(data);
+                promise.resolve(entity);
             }).catch(function (_ref11) {
                 var response = _ref11.response;
 
@@ -376,7 +376,7 @@ var PowerEntity = function () {
                     });
                 }
 
-                promise.reject(response);
+                promise.reject(entity);
             });
 
             return promise.await;

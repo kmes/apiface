@@ -135,10 +135,12 @@ var BaseEntity = function () {
             this.data = data;
             this.setStatus(_constants.DATA_STATUS.modified);
             this.refreshUpdateAt();
+
+            return this.getData();
         }
     }, {
-        key: 'addData',
-        value: function addData(data) {
+        key: 'pushData',
+        value: function pushData(data) {
             if (!data) return false;
             if (_typeof(this.data) !== 'object' || typeof this.data.push !== 'function') {
                 return false;
@@ -148,6 +150,21 @@ var BaseEntity = function () {
 
             this.setStatus(_constants.DATA_STATUS.added);
             this.refreshUpdateAt();
+        }
+    }, {
+        key: 'get',
+        value: function get(field) {
+            var data = this.getData();
+            return (typeof data === 'undefined' ? 'undefined' : _typeof(data)) === 'object' ? data[field] : false;
+        }
+    }, {
+        key: 'set',
+        value: function set(field, value) {
+            var data = this.getData();
+            if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) !== 'object') return false;
+            data[field] = value;
+
+            return this.setData(data);
         }
     }]);
 
