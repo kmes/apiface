@@ -49,7 +49,7 @@ export default class Apiface {
         });
     }
 
-    getEntity({ name, uri, fixedParams, entityClass, customAdapter, overwrite = false }) {
+    getPowerEntity({ name, uri, fixedParams, entityClass, customAdapter, overwrite = false }) {
         var entityContainer = this.getEntityContainer();
 
         var entity = null;
