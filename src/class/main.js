@@ -9,7 +9,9 @@ import PowerEntity from './PowerEntity';
 import adapters from './adapters/adapters';
 import entities from './entities/entities'
 
-Object.assign( Apiface, {
+
+export default {
+    Apiface,
     EntityContainer,
     EntityController,
     EntityFactory,
@@ -17,6 +19,4 @@ Object.assign( Apiface, {
     PowerEntity,
     adapters,
     entities
-});
-
-export default Apiface;
+};
