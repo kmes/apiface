@@ -1,4 +1,4 @@
 import AjaxAdapter from './AjaxAdapter';
-import FirebaseAdapter from './FirebaseAdapter';
+//import FirebaseAdapter from './FirebaseAdapter';
 
-export default { AjaxAdapter, FirebaseAdapter };
+export default { AjaxAdapter };
