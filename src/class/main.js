@@ -10,7 +10,7 @@ import adapters from './adapters/adapters';
 import entities from './entities/entities'
 
 
-export default {
+export {
     Apiface,
     EntityContainer,
     EntityController,
