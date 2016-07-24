@@ -9,12 +9,25 @@ import { promiseFactory } from './helper/helper';
 
 export default class Apiface {
     constructor({ adapter }) {
-        this.defaultAdapter = adapter;
+        //this.defaultAdapter = adapter;
+        this.setDefaultAdapter( adapter );
 
         this.entityContainer = new EntityContainer({ entityFactory: new EntityFactory() });
 
-        this.entityController = new EntityController({ adapter: this.defaultAdapter });
+        this.entityController = new EntityController({ adapter: this.getDefaultAdapter() });
         this.eventManager = new EventManager();
+    }
+
+    setDefaultAdapter( adapter ) {
+        return this.defaultAdapter = adapter;
+    }
+    getDefaultAdapter() {
+        return this.defaultAdapter;
+    }
+    setAdapter( adapter ) {
+        this.setDefaultAdapter( adapter );
+
+        this.entityController.setAdapter( this.getDefaultAdapter() );
     }
 
     getEntityContainer() {

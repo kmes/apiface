@@ -1,6 +1,7 @@
 export default class EntityController {
     constructor({ adapter }) {
-        this.adapter = adapter;
+        //this.adapter = adapter;
+        this.setAdapter( adapter );
     }
 
     getAdapter({ uri, params = {}, adapter = null }) {
