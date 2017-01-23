@@ -22,14 +22,14 @@ var EntityFactory = function () {
     _createClass(EntityFactory, [{
         key: 'make',
         value: function make(_ref) {
-            var _ref$uri = _ref.uri;
-            var uri = _ref$uri === undefined ? '' : _ref$uri;
-            var _ref$name = _ref.name;
-            var name = _ref$name === undefined ? null : _ref$name;
-            var _ref$fixedParams = _ref.fixedParams;
-            var fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams;
-            var _ref$entityClass = _ref.entityClass;
-            var entityClass = _ref$entityClass === undefined ? _BaseEntity2.default : _ref$entityClass;
+            var _ref$uri = _ref.uri,
+                uri = _ref$uri === undefined ? '' : _ref$uri,
+                _ref$name = _ref.name,
+                name = _ref$name === undefined ? null : _ref$name,
+                _ref$fixedParams = _ref.fixedParams,
+                fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams,
+                _ref$entityClass = _ref.entityClass,
+                entityClass = _ref$entityClass === undefined ? _BaseEntity2.default : _ref$entityClass;
 
 
             if (!uri && !name) return null;

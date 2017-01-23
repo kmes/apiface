@@ -25,10 +25,10 @@ var EntityContainer = function () {
     _createClass(EntityContainer, [{
         key: 'setEntity',
         value: function setEntity(_ref2) {
-            var uri = _ref2.uri;
-            var name = _ref2.name;
-            var fixedParams = _ref2.fixedParams;
-            var entityClass = _ref2.entityClass;
+            var uri = _ref2.uri,
+                name = _ref2.name,
+                fixedParams = _ref2.fixedParams,
+                entityClass = _ref2.entityClass;
 
             var entity = this.entityFactory.make({
                 uri: uri,

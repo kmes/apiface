@@ -14,12 +14,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var PowerEntity = function () {
     function PowerEntity(_ref) {
-        var entity = _ref.entity;
-        var customAdapter = _ref.customAdapter;
-        var entityController = _ref.entityController;
-        var eventManager = _ref.eventManager;
-        var _ref$safeMode = _ref.safeMode;
-        var safeMode = _ref$safeMode === undefined ? false : _ref$safeMode;
+        var entity = _ref.entity,
+            customAdapter = _ref.customAdapter,
+            entityController = _ref.entityController,
+            eventManager = _ref.eventManager,
+            _ref$safeMode = _ref.safeMode,
+            safeMode = _ref$safeMode === undefined ? false : _ref$safeMode;
 
         _classCallCheck(this, PowerEntity);
 
@@ -112,7 +112,7 @@ var PowerEntity = function () {
     }, {
         key: 'fetch',
         value: function fetch() {
-            var actionParams = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var actionParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             var promise = (0, _helper.promiseFactory)();
 
@@ -138,8 +138,8 @@ var PowerEntity = function () {
             entity.setStatus(_constants.DATA_STATUS.busy);
 
             entityController.readData({ uri: entity.getUri(), params: params, adapter: this.customAdapter }).then(function (_ref2) {
-                var data = _ref2.data;
-                var response = _ref2.response;
+                var data = _ref2.data,
+                    response = _ref2.response;
 
                 entity.setData(data);
                 entity.setStatus(_constants.DATA_STATUS.synced);
@@ -172,7 +172,7 @@ var PowerEntity = function () {
     }, {
         key: 'save',
         value: function save() {
-            var actionParams = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var actionParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             var promise = (0, _helper.promiseFactory)();
 
@@ -218,8 +218,8 @@ var PowerEntity = function () {
                     break;
                 case _constants.DATA_STATUS.created:
                     entityController.createData({ uri: entity.getUri(), data: entity.getData(), adapter: this.customAdapter, checkIfExist: this.safeMode }).then(function (_ref4) {
-                        var data = _ref4.data;
-                        var response = _ref4.response;
+                        var data = _ref4.data,
+                            response = _ref4.response;
 
                         entity.setData(data);
                         entity.setStatus(_constants.DATA_STATUS.synced);
@@ -245,8 +245,8 @@ var PowerEntity = function () {
                     break;
                 case _constants.DATA_STATUS.modified:
                     entityController.updateData({ uri: entity.getUri(), data: entity.getData(), adapter: this.customAdapter, oldData: this.safeMode ? this.oldData : null }).then(function (_ref6) {
-                        var data = _ref6.data;
-                        var response = _ref6.response;
+                        var data = _ref6.data,
+                            response = _ref6.response;
 
                         entity.setData(data);
                         entity.setStatus(_constants.DATA_STATUS.synced);
@@ -272,8 +272,8 @@ var PowerEntity = function () {
                     break;
                 case _constants.DATA_STATUS.added:
                     entityController.pushData({ uri: entity.getUri(), data: this.getNodeAdded(), adapter: this.customAdapter }).then(function (_ref8) {
-                        var data = _ref8.data;
-                        var response = _ref8.response;
+                        var data = _ref8.data,
+                            response = _ref8.response;
 
                         entity.setData(data);
                         entity.setStatus(_constants.DATA_STATUS.synced);
@@ -301,7 +301,8 @@ var PowerEntity = function () {
 
                             try {
                                 for (var _iterator = response.notAdded[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                                    var node = _step.value.node;
+                                    var _ref11 = _step.value;
+                                    var node = _ref11.node;
 
                                     this.nodeAdded.push(node);
                                 }
@@ -341,7 +342,7 @@ var PowerEntity = function () {
     }, {
         key: 'sync',
         value: function sync() {
-            var callback = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
             var promise = (0, _helper.promiseFactory)();
 
@@ -361,9 +362,9 @@ var PowerEntity = function () {
                 });
             }
 
-            entityController.onChangeData({ uri: entity.getUri(), adapter: this.customAdapter, callback: callback }).then(function (_ref10) {
-                var data = _ref10.data;
-                var response = _ref10.response;
+            entityController.onChangeData({ uri: entity.getUri(), adapter: this.customAdapter, callback: callback }).then(function (_ref12) {
+                var data = _ref12.data,
+                    response = _ref12.response;
 
                 entity.setData(data);
                 entity.setStatus(_constants.DATA_STATUS.synced);
@@ -376,8 +377,8 @@ var PowerEntity = function () {
                 }
 
                 promise.resolve(entity);
-            }).catch(function (_ref11) {
-                var response = _ref11.response;
+            }).catch(function (_ref13) {
+                var response = _ref13.response;
 
                 entity.setStatus(_constants.DATA_STATUS.error);
 
@@ -396,8 +397,8 @@ var PowerEntity = function () {
     }, {
         key: 'on',
         value: function on() {
-            var eventName = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-            var callback = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
+            var eventName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+            var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
 
             this.eventManager.addEventListener(eventName, function (response) {
                 if (!response || !response.data || !response.data.entity) {

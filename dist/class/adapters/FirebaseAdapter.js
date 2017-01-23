@@ -26,12 +26,12 @@ var FirebaseAdapter = function (_AbstractAdapter) {
     _inherits(FirebaseAdapter, _AbstractAdapter);
 
     function FirebaseAdapter(_ref) {
-        var _ref$url = _ref.url;
-        var url = _ref$url === undefined ? '' : _ref$url;
+        var _ref$url = _ref.url,
+            url = _ref$url === undefined ? '' : _ref$url;
 
         _classCallCheck(this, FirebaseAdapter);
 
-        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(FirebaseAdapter).call(this, { url: url }));
+        var _this = _possibleConstructorReturn(this, (FirebaseAdapter.__proto__ || Object.getPrototypeOf(FirebaseAdapter)).call(this, { url: url }));
 
         _this.fb = new _firebase2.default(_this.getUrl());
         return _this;
@@ -40,14 +40,14 @@ var FirebaseAdapter = function (_AbstractAdapter) {
     _createClass(FirebaseAdapter, [{
         key: 'getUriRef',
         value: function getUriRef() {
-            var uri = arguments.length <= 0 || arguments[0] === undefined ? this.getUri() : arguments[0];
+            var uri = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : this.getUri();
 
             return this.fb.child(uri);
         }
     }, {
         key: 'createData',
         value: function createData(data) {
-            var checkIfExist = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+            var checkIfExist = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             var promise = this.getPromise();
 
@@ -92,7 +92,7 @@ var FirebaseAdapter = function (_AbstractAdapter) {
     }, {
         key: 'updateData',
         value: function updateData(data) {
-            var oldData = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var oldData = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             var promise = this.getPromise();
 
@@ -142,9 +142,9 @@ var FirebaseAdapter = function (_AbstractAdapter) {
             var uriRef = this.getUriRef();
 
             var _fnPushed = function (_ref2) {
-                var node = _ref2.node;
-                var id = _ref2.id;
-                var error = _ref2.error;
+                var node = _ref2.node,
+                    id = _ref2.id,
+                    error = _ref2.error;
 
                 this.afterPush({ node: node, id: id, error: error });
 
@@ -198,7 +198,7 @@ var FirebaseAdapter = function (_AbstractAdapter) {
     }, {
         key: 'onChangeData',
         value: function onChangeData() {
-            var callback = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
             var promise = this.getPromise();
 

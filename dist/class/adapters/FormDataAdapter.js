@@ -18,46 +18,55 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-var AjaxAdapter = function (_AbstractHttpAdapter) {
-    _inherits(AjaxAdapter, _AbstractHttpAdapter);
+var FormDataAdapter = function (_AbstractHttpAdapter) {
+    _inherits(FormDataAdapter, _AbstractHttpAdapter);
 
-    function AjaxAdapter(_ref) {
+    function FormDataAdapter(_ref) {
         var url = _ref.url;
 
-        _classCallCheck(this, AjaxAdapter);
+        _classCallCheck(this, FormDataAdapter);
 
-        return _possibleConstructorReturn(this, (AjaxAdapter.__proto__ || Object.getPrototypeOf(AjaxAdapter)).call(this, { url: url }));
+        return _possibleConstructorReturn(this, (FormDataAdapter.__proto__ || Object.getPrototypeOf(FormDataAdapter)).call(this, { url: url }));
     }
 
-    _createClass(AjaxAdapter, [{
+    _createClass(FormDataAdapter, [{
         key: 'createData',
         value: function createData() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('post', data);
+            return this.httpCall('post', this.makeFormData(data));
         }
     }, {
         key: 'readData',
         value: function readData() {
             var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('get', params);
+            return this.httpCall('get', this.makeFormData(params));
         }
     }, {
         key: 'updateData',
         value: function updateData() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('post', data);
+            return this.httpCall('post', this.makeFormData(data));
         }
+    }, {
+        key: 'makeFormData',
+        value: function makeFormData() {
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-        /*pushData( params = {} ) {
-         return this.ajaxCall( 'post', params );
-         }*/
+            var formData = new FormData();
 
+            for (var key in data) {
+                var value = data[key];
+                formData.append(key, value);
+            }
+
+            return formData;
+        }
     }]);
 
-    return AjaxAdapter;
+    return FormDataAdapter;
 }(_AbstractHttpAdapter3.default);
 
-exports.default = AjaxAdapter;
+exports.default = FormDataAdapter;

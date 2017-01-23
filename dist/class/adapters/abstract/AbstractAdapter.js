@@ -12,8 +12,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var AbstractAdapter = function () {
     function AbstractAdapter(_ref) {
-        var _ref$url = _ref.url;
-        var url = _ref$url === undefined ? '' : _ref$url;
+        var _ref$url = _ref.url,
+            url = _ref$url === undefined ? '' : _ref$url;
 
         _classCallCheck(this, AbstractAdapter);
 
@@ -82,12 +82,12 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterAction',
         value: function afterAction(_ref2, _ref3) {
-            var pendingName = _ref2.pendingName;
-            var successName = _ref2.successName;
-            var errorName = _ref2.errorName;
-            var node = _ref3.node;
-            var id = _ref3.id;
-            var error = _ref3.error;
+            var pendingName = _ref2.pendingName,
+                successName = _ref2.successName,
+                errorName = _ref2.errorName;
+            var node = _ref3.node,
+                id = _ref3.id,
+                error = _ref3.error;
 
             if (!error) {
                 this.results[successName].push({
@@ -120,9 +120,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterCreate',
         value: function afterCreate(_ref4) {
-            var node = _ref4.node;
-            var id = _ref4.id;
-            var error = _ref4.error;
+            var node = _ref4.node,
+                id = _ref4.id,
+                error = _ref4.error;
 
             return this.afterAction({ pendingName: 'pendingToCreate', successName: 'created', errorName: 'notCreated' }, { node: node, id: id, error: error });
         }
@@ -134,9 +134,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterRead',
         value: function afterRead(_ref5) {
-            var node = _ref5.node;
-            var id = _ref5.id;
-            var error = _ref5.error;
+            var node = _ref5.node,
+                id = _ref5.id,
+                error = _ref5.error;
 
             return this.afterAction({ pendingName: 'pendingToRead', successName: 'readed', errorName: 'notReaded' }, { node: node, id: id, error: error });
         }
@@ -148,9 +148,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterUpdate',
         value: function afterUpdate(_ref6) {
-            var node = _ref6.node;
-            var id = _ref6.id;
-            var error = _ref6.error;
+            var node = _ref6.node,
+                id = _ref6.id,
+                error = _ref6.error;
 
             return this.afterAction({ pendingName: 'pendingToUpdate', successName: 'updated', errorName: 'notUpdated' }, { node: node, id: id, error: error });
         }
@@ -162,9 +162,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterDelete',
         value: function afterDelete(_ref7) {
-            var node = _ref7.node;
-            var id = _ref7.id;
-            var error = _ref7.error;
+            var node = _ref7.node,
+                id = _ref7.id,
+                error = _ref7.error;
 
             return this.afterAction({ pendingName: 'pendingToDelete', successName: 'deleted', errorName: 'notDeleted' }, { node: node, id: id, error: error });
         }
@@ -176,9 +176,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterPush',
         value: function afterPush(_ref8) {
-            var node = _ref8.node;
-            var id = _ref8.id;
-            var error = _ref8.error;
+            var node = _ref8.node,
+                id = _ref8.id,
+                error = _ref8.error;
 
             return this.afterAction({ pendingName: 'pendingToPush', successName: 'pushed', errorName: 'notPushed' }, { node: node, id: id, error: error });
         }

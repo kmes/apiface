@@ -34,9 +34,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Apiface = function () {
     function Apiface() {
-        var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-        var adapter = _ref.adapter;
+        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            adapter = _ref.adapter;
 
         _classCallCheck(this, Apiface);
 
@@ -84,8 +83,8 @@ var Apiface = function () {
     }, {
         key: 'makePowerEntity',
         value: function makePowerEntity(_ref2) {
-            var entity = _ref2.entity;
-            var customAdapter = _ref2.customAdapter;
+            var entity = _ref2.entity,
+                customAdapter = _ref2.customAdapter;
 
             return new _PowerEntity2.default({
                 entity: entity,
@@ -97,13 +96,13 @@ var Apiface = function () {
     }, {
         key: 'getPowerEntity',
         value: function getPowerEntity(_ref3) {
-            var name = _ref3.name;
-            var uri = _ref3.uri;
-            var fixedParams = _ref3.fixedParams;
-            var entityClass = _ref3.entityClass;
-            var customAdapter = _ref3.customAdapter;
-            var _ref3$overwrite = _ref3.overwrite;
-            var overwrite = _ref3$overwrite === undefined ? false : _ref3$overwrite;
+            var name = _ref3.name,
+                uri = _ref3.uri,
+                fixedParams = _ref3.fixedParams,
+                entityClass = _ref3.entityClass,
+                customAdapter = _ref3.customAdapter,
+                _ref3$overwrite = _ref3.overwrite,
+                overwrite = _ref3$overwrite === undefined ? false : _ref3$overwrite;
 
             var entityContainer = this.getEntityContainer();
 
@@ -127,8 +126,8 @@ var Apiface = function () {
             var _this = this,
                 _arguments = arguments;
 
-            var eventName = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-            var callback = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
+            var eventName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+            var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
 
             if (!eventName) {
                 return false;

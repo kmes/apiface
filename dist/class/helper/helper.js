@@ -25,8 +25,8 @@ function promiseFactory() {
 }
 
 function getEventsName(_ref) {
-    var method = _ref.method;
-    var dataStatus = _ref.dataStatus;
+    var method = _ref.method,
+        dataStatus = _ref.dataStatus;
 
     var prefix = method;
 

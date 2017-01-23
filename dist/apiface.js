@@ -1251,7 +1251,6 @@ module.exports = {
 
 },{"./helpers/bind":12}],23:[function(require,module,exports){
 // shim for using process in browser
-
 var process = module.exports = {};
 
 // cached from whatever global is present so that test runners that stub it
@@ -1262,22 +1261,84 @@ var process = module.exports = {};
 var cachedSetTimeout;
 var cachedClearTimeout;
 
+function defaultSetTimout() {
+    throw new Error('setTimeout has not been defined');
+}
+function defaultClearTimeout () {
+    throw new Error('clearTimeout has not been defined');
+}
 (function () {
-  try {
-    cachedSetTimeout = setTimeout;
-  } catch (e) {
-    cachedSetTimeout = function () {
-      throw new Error('setTimeout is not defined');
+    try {
+        if (typeof setTimeout === 'function') {
+            cachedSetTimeout = setTimeout;
+        } else {
+            cachedSetTimeout = defaultSetTimout;
+        }
+    } catch (e) {
+        cachedSetTimeout = defaultSetTimout;
     }
-  }
-  try {
-    cachedClearTimeout = clearTimeout;
-  } catch (e) {
-    cachedClearTimeout = function () {
-      throw new Error('clearTimeout is not defined');
+    try {
+        if (typeof clearTimeout === 'function') {
+            cachedClearTimeout = clearTimeout;
+        } else {
+            cachedClearTimeout = defaultClearTimeout;
+        }
+    } catch (e) {
+        cachedClearTimeout = defaultClearTimeout;
     }
-  }
 } ())
+function runTimeout(fun) {
+    if (cachedSetTimeout === setTimeout) {
+        //normal enviroments in sane situations
+        return setTimeout(fun, 0);
+    }
+    // if setTimeout wasn't available but was latter defined
+    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+        cachedSetTimeout = setTimeout;
+        return setTimeout(fun, 0);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedSetTimeout(fun, 0);
+    } catch(e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+            return cachedSetTimeout.call(null, fun, 0);
+        } catch(e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+            return cachedSetTimeout.call(this, fun, 0);
+        }
+    }
+
+
+}
+function runClearTimeout(marker) {
+    if (cachedClearTimeout === clearTimeout) {
+        //normal enviroments in sane situations
+        return clearTimeout(marker);
+    }
+    // if clearTimeout wasn't available but was latter defined
+    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+        cachedClearTimeout = clearTimeout;
+        return clearTimeout(marker);
+    }
+    try {
+        // when when somebody has screwed with setTimeout but no I.E. maddness
+        return cachedClearTimeout(marker);
+    } catch (e){
+        try {
+            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+            return cachedClearTimeout.call(null, marker);
+        } catch (e){
+            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+            return cachedClearTimeout.call(this, marker);
+        }
+    }
+
+
+
+}
 var queue = [];
 var draining = false;
 var currentQueue;
@@ -1302,7 +1363,7 @@ function drainQueue() {
     if (draining) {
         return;
     }
-    var timeout = cachedSetTimeout(cleanUpNextTick);
+    var timeout = runTimeout(cleanUpNextTick);
     draining = true;
 
     var len = queue.length;
@@ -1319,7 +1380,7 @@ function drainQueue() {
     }
     currentQueue = null;
     draining = false;
-    cachedClearTimeout(timeout);
+    runClearTimeout(timeout);
 }
 
 process.nextTick = function (fun) {
@@ -1331,7 +1392,7 @@ process.nextTick = function (fun) {
     }
     queue.push(new Item(fun, args));
     if (queue.length === 1 && !draining) {
-        cachedSetTimeout(drainQueue, 0);
+        runTimeout(drainQueue);
     }
 };
 
@@ -1391,7 +1452,7 @@ if (window) {
 
 exports.default = _main2.default;
 
-},{"./class/main":39}],25:[function(require,module,exports){
+},{"./class/main":40}],25:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1428,9 +1489,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var Apiface = function () {
     function Apiface() {
-        var _ref = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-        var adapter = _ref.adapter;
+        var _ref = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {},
+            adapter = _ref.adapter;
 
         _classCallCheck(this, Apiface);
 
@@ -1478,8 +1538,8 @@ var Apiface = function () {
     }, {
         key: 'makePowerEntity',
         value: function makePowerEntity(_ref2) {
-            var entity = _ref2.entity;
-            var customAdapter = _ref2.customAdapter;
+            var entity = _ref2.entity,
+                customAdapter = _ref2.customAdapter;
 
             return new _PowerEntity2.default({
                 entity: entity,
@@ -1491,13 +1551,13 @@ var Apiface = function () {
     }, {
         key: 'getPowerEntity',
         value: function getPowerEntity(_ref3) {
-            var name = _ref3.name;
-            var uri = _ref3.uri;
-            var fixedParams = _ref3.fixedParams;
-            var entityClass = _ref3.entityClass;
-            var customAdapter = _ref3.customAdapter;
-            var _ref3$overwrite = _ref3.overwrite;
-            var overwrite = _ref3$overwrite === undefined ? false : _ref3$overwrite;
+            var name = _ref3.name,
+                uri = _ref3.uri,
+                fixedParams = _ref3.fixedParams,
+                entityClass = _ref3.entityClass,
+                customAdapter = _ref3.customAdapter,
+                _ref3$overwrite = _ref3.overwrite,
+                overwrite = _ref3$overwrite === undefined ? false : _ref3$overwrite;
 
             var entityContainer = this.getEntityContainer();
 
@@ -1521,8 +1581,8 @@ var Apiface = function () {
             var _this = this,
                 _arguments = arguments;
 
-            var eventName = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-            var callback = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
+            var eventName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+            var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
 
             if (!eventName) {
                 return false;
@@ -1549,7 +1609,7 @@ var Apiface = function () {
 
 exports.default = Apiface;
 
-},{"./EntityContainer":26,"./EntityController":27,"./EntityFactory":28,"./EventManager":29,"./PowerEntity":30,"./helper/helper":38}],26:[function(require,module,exports){
+},{"./EntityContainer":26,"./EntityController":27,"./EntityFactory":28,"./EventManager":29,"./PowerEntity":30,"./helper/helper":39}],26:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1577,10 +1637,10 @@ var EntityContainer = function () {
     _createClass(EntityContainer, [{
         key: 'setEntity',
         value: function setEntity(_ref2) {
-            var uri = _ref2.uri;
-            var name = _ref2.name;
-            var fixedParams = _ref2.fixedParams;
-            var entityClass = _ref2.entityClass;
+            var uri = _ref2.uri,
+                name = _ref2.name,
+                fixedParams = _ref2.fixedParams,
+                entityClass = _ref2.entityClass;
 
             var entity = this.entityFactory.make({
                 uri: uri,
@@ -1666,11 +1726,11 @@ var EntityController = function () {
     _createClass(EntityController, [{
         key: "getAdapter",
         value: function getAdapter(_ref2) {
-            var uri = _ref2.uri;
-            var _ref2$params = _ref2.params;
-            var params = _ref2$params === undefined ? {} : _ref2$params;
-            var _ref2$adapter = _ref2.adapter;
-            var adapter = _ref2$adapter === undefined ? null : _ref2$adapter;
+            var uri = _ref2.uri,
+                _ref2$params = _ref2.params,
+                params = _ref2$params === undefined ? {} : _ref2$params,
+                _ref2$adapter = _ref2.adapter,
+                adapter = _ref2$adapter === undefined ? null : _ref2$adapter;
 
             if (!adapter) adapter = this.adapter;
 
@@ -1687,13 +1747,13 @@ var EntityController = function () {
     }, {
         key: "createData",
         value: function createData(_ref3) {
-            var uri = _ref3.uri;
-            var _ref3$params = _ref3.params;
-            var params = _ref3$params === undefined ? {} : _ref3$params;
-            var _ref3$adapter = _ref3.adapter;
-            var adapter = _ref3$adapter === undefined ? null : _ref3$adapter;
-            var _ref3$checkIfExist = _ref3.checkIfExist;
-            var checkIfExist = _ref3$checkIfExist === undefined ? false : _ref3$checkIfExist;
+            var uri = _ref3.uri,
+                _ref3$params = _ref3.params,
+                params = _ref3$params === undefined ? {} : _ref3$params,
+                _ref3$adapter = _ref3.adapter,
+                adapter = _ref3$adapter === undefined ? null : _ref3$adapter,
+                _ref3$checkIfExist = _ref3.checkIfExist,
+                checkIfExist = _ref3$checkIfExist === undefined ? false : _ref3$checkIfExist;
 
             return this.getAdapter({ uri: uri, params: params, adapter: adapter }).createData(params, checkIfExist);
         } //return Promise
@@ -1701,13 +1761,13 @@ var EntityController = function () {
     }, {
         key: "readData",
         value: function readData(_ref4) {
-            var uri = _ref4.uri;
-            var _ref4$params = _ref4.params;
-            var params = _ref4$params === undefined ? {} : _ref4$params;
-            var _ref4$data = _ref4.data;
-            var data = _ref4$data === undefined ? {} : _ref4$data;
-            var _ref4$adapter = _ref4.adapter;
-            var adapter = _ref4$adapter === undefined ? null : _ref4$adapter;
+            var uri = _ref4.uri,
+                _ref4$params = _ref4.params,
+                params = _ref4$params === undefined ? {} : _ref4$params,
+                _ref4$data = _ref4.data,
+                data = _ref4$data === undefined ? {} : _ref4$data,
+                _ref4$adapter = _ref4.adapter,
+                adapter = _ref4$adapter === undefined ? null : _ref4$adapter;
 
             return this.getAdapter({ uri: uri, params: params, adapter: adapter }).readData(params);
         } //return Promise
@@ -1715,15 +1775,15 @@ var EntityController = function () {
     }, {
         key: "updateData",
         value: function updateData(_ref5) {
-            var uri = _ref5.uri;
-            var _ref5$params = _ref5.params;
-            var params = _ref5$params === undefined ? {} : _ref5$params;
-            var _ref5$data = _ref5.data;
-            var data = _ref5$data === undefined ? {} : _ref5$data;
-            var _ref5$adapter = _ref5.adapter;
-            var adapter = _ref5$adapter === undefined ? null : _ref5$adapter;
-            var _ref5$oldData = _ref5.oldData;
-            var oldData = _ref5$oldData === undefined ? null : _ref5$oldData;
+            var uri = _ref5.uri,
+                _ref5$params = _ref5.params,
+                params = _ref5$params === undefined ? {} : _ref5$params,
+                _ref5$data = _ref5.data,
+                data = _ref5$data === undefined ? {} : _ref5$data,
+                _ref5$adapter = _ref5.adapter,
+                adapter = _ref5$adapter === undefined ? null : _ref5$adapter,
+                _ref5$oldData = _ref5.oldData,
+                oldData = _ref5$oldData === undefined ? null : _ref5$oldData;
 
             return this.getAdapter({ uri: uri, params: params, adapter: adapter }).updateData(data, oldData);
         } //return Promise
@@ -1731,13 +1791,13 @@ var EntityController = function () {
     }, {
         key: "deleteData",
         value: function deleteData(_ref6) {
-            var uri = _ref6.uri;
-            var _ref6$params = _ref6.params;
-            var params = _ref6$params === undefined ? {} : _ref6$params;
-            var _ref6$data = _ref6.data;
-            var data = _ref6$data === undefined ? {} : _ref6$data;
-            var _ref6$adapter = _ref6.adapter;
-            var adapter = _ref6$adapter === undefined ? null : _ref6$adapter;
+            var uri = _ref6.uri,
+                _ref6$params = _ref6.params,
+                params = _ref6$params === undefined ? {} : _ref6$params,
+                _ref6$data = _ref6.data,
+                data = _ref6$data === undefined ? {} : _ref6$data,
+                _ref6$adapter = _ref6.adapter,
+                adapter = _ref6$adapter === undefined ? null : _ref6$adapter;
 
             return this.getAdapter({ uri: uri, params: params, adapter: adapter }).deleteData(data);
         } //return Promise
@@ -1745,13 +1805,13 @@ var EntityController = function () {
     }, {
         key: "pushData",
         value: function pushData(_ref7) {
-            var uri = _ref7.uri;
-            var _ref7$params = _ref7.params;
-            var params = _ref7$params === undefined ? {} : _ref7$params;
-            var _ref7$data = _ref7.data;
-            var data = _ref7$data === undefined ? {} : _ref7$data;
-            var _ref7$adapter = _ref7.adapter;
-            var adapter = _ref7$adapter === undefined ? null : _ref7$adapter;
+            var uri = _ref7.uri,
+                _ref7$params = _ref7.params,
+                params = _ref7$params === undefined ? {} : _ref7$params,
+                _ref7$data = _ref7.data,
+                data = _ref7$data === undefined ? {} : _ref7$data,
+                _ref7$adapter = _ref7.adapter,
+                adapter = _ref7$adapter === undefined ? null : _ref7$adapter;
 
             return this.getAdapter({ uri: uri, params: params, adapter: adapter }).pushData(data);
         } //return Promise
@@ -1759,15 +1819,15 @@ var EntityController = function () {
     }, {
         key: "onChangeData",
         value: function onChangeData(_ref8) {
-            var uri = _ref8.uri;
-            var _ref8$params = _ref8.params;
-            var params = _ref8$params === undefined ? {} : _ref8$params;
-            var _ref8$data = _ref8.data;
-            var data = _ref8$data === undefined ? {} : _ref8$data;
-            var _ref8$adapter = _ref8.adapter;
-            var adapter = _ref8$adapter === undefined ? null : _ref8$adapter;
-            var _ref8$callback = _ref8.callback;
-            var callback = _ref8$callback === undefined ? function () {} : _ref8$callback;
+            var uri = _ref8.uri,
+                _ref8$params = _ref8.params,
+                params = _ref8$params === undefined ? {} : _ref8$params,
+                _ref8$data = _ref8.data,
+                data = _ref8$data === undefined ? {} : _ref8$data,
+                _ref8$adapter = _ref8.adapter,
+                adapter = _ref8$adapter === undefined ? null : _ref8$adapter,
+                _ref8$callback = _ref8.callback,
+                callback = _ref8$callback === undefined ? function () {} : _ref8$callback;
 
             return this.getAdapter({ uri: uri, params: params, adapter: adapter }).onChangeData(callback);
         } //return Promise
@@ -1804,14 +1864,14 @@ var EntityFactory = function () {
     _createClass(EntityFactory, [{
         key: 'make',
         value: function make(_ref) {
-            var _ref$uri = _ref.uri;
-            var uri = _ref$uri === undefined ? '' : _ref$uri;
-            var _ref$name = _ref.name;
-            var name = _ref$name === undefined ? null : _ref$name;
-            var _ref$fixedParams = _ref.fixedParams;
-            var fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams;
-            var _ref$entityClass = _ref.entityClass;
-            var entityClass = _ref$entityClass === undefined ? _BaseEntity2.default : _ref$entityClass;
+            var _ref$uri = _ref.uri,
+                uri = _ref$uri === undefined ? '' : _ref$uri,
+                _ref$name = _ref.name,
+                name = _ref$name === undefined ? null : _ref$name,
+                _ref$fixedParams = _ref.fixedParams,
+                fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams,
+                _ref$entityClass = _ref.entityClass,
+                entityClass = _ref$entityClass === undefined ? _BaseEntity2.default : _ref$entityClass;
 
 
             if (!uri && !name) return null;
@@ -1829,7 +1889,7 @@ var EntityFactory = function () {
 
 exports.default = EntityFactory;
 
-},{"./entities/BaseEntity":36}],29:[function(require,module,exports){
+},{"./entities/BaseEntity":37}],29:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1881,7 +1941,7 @@ var EventManager = function () {
     _createClass(EventManager, [{
         key: 'addEventListener',
         value: function addEventListener(evtName, callback) {
-            var priority = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+            var priority = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
             var errorMsg = '';
             if (!evtName || typeof evtName !== 'string') errorMsg = 'Event\'s name is not defined.';
@@ -1907,7 +1967,7 @@ var EventManager = function () {
     }, {
         key: 'getTruePriority',
         value: function getTruePriority(evtName) {
-            var priority = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var priority = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             if (!this.listeners[evtName]) return false;
 
@@ -1945,7 +2005,7 @@ var EventManager = function () {
     }, {
         key: 'trigger',
         value: function trigger(evtName) {
-            var data = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             if (!this.listeners[evtName]) return false;
 
@@ -1966,7 +2026,7 @@ var EventManager = function () {
 
 exports.default = EventManager;
 
-},{"./config/constants":35}],30:[function(require,module,exports){
+},{"./config/constants":36}],30:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -1983,12 +2043,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var PowerEntity = function () {
     function PowerEntity(_ref) {
-        var entity = _ref.entity;
-        var customAdapter = _ref.customAdapter;
-        var entityController = _ref.entityController;
-        var eventManager = _ref.eventManager;
-        var _ref$safeMode = _ref.safeMode;
-        var safeMode = _ref$safeMode === undefined ? false : _ref$safeMode;
+        var entity = _ref.entity,
+            customAdapter = _ref.customAdapter,
+            entityController = _ref.entityController,
+            eventManager = _ref.eventManager,
+            _ref$safeMode = _ref.safeMode,
+            safeMode = _ref$safeMode === undefined ? false : _ref$safeMode;
 
         _classCallCheck(this, PowerEntity);
 
@@ -2081,7 +2141,7 @@ var PowerEntity = function () {
     }, {
         key: 'fetch',
         value: function fetch() {
-            var actionParams = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var actionParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             var promise = (0, _helper.promiseFactory)();
 
@@ -2107,8 +2167,8 @@ var PowerEntity = function () {
             entity.setStatus(_constants.DATA_STATUS.busy);
 
             entityController.readData({ uri: entity.getUri(), params: params, adapter: this.customAdapter }).then(function (_ref2) {
-                var data = _ref2.data;
-                var response = _ref2.response;
+                var data = _ref2.data,
+                    response = _ref2.response;
 
                 entity.setData(data);
                 entity.setStatus(_constants.DATA_STATUS.synced);
@@ -2141,7 +2201,7 @@ var PowerEntity = function () {
     }, {
         key: 'save',
         value: function save() {
-            var actionParams = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var actionParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             var promise = (0, _helper.promiseFactory)();
 
@@ -2187,8 +2247,8 @@ var PowerEntity = function () {
                     break;
                 case _constants.DATA_STATUS.created:
                     entityController.createData({ uri: entity.getUri(), data: entity.getData(), adapter: this.customAdapter, checkIfExist: this.safeMode }).then(function (_ref4) {
-                        var data = _ref4.data;
-                        var response = _ref4.response;
+                        var data = _ref4.data,
+                            response = _ref4.response;
 
                         entity.setData(data);
                         entity.setStatus(_constants.DATA_STATUS.synced);
@@ -2214,8 +2274,8 @@ var PowerEntity = function () {
                     break;
                 case _constants.DATA_STATUS.modified:
                     entityController.updateData({ uri: entity.getUri(), data: entity.getData(), adapter: this.customAdapter, oldData: this.safeMode ? this.oldData : null }).then(function (_ref6) {
-                        var data = _ref6.data;
-                        var response = _ref6.response;
+                        var data = _ref6.data,
+                            response = _ref6.response;
 
                         entity.setData(data);
                         entity.setStatus(_constants.DATA_STATUS.synced);
@@ -2241,8 +2301,8 @@ var PowerEntity = function () {
                     break;
                 case _constants.DATA_STATUS.added:
                     entityController.pushData({ uri: entity.getUri(), data: this.getNodeAdded(), adapter: this.customAdapter }).then(function (_ref8) {
-                        var data = _ref8.data;
-                        var response = _ref8.response;
+                        var data = _ref8.data,
+                            response = _ref8.response;
 
                         entity.setData(data);
                         entity.setStatus(_constants.DATA_STATUS.synced);
@@ -2270,7 +2330,8 @@ var PowerEntity = function () {
 
                             try {
                                 for (var _iterator = response.notAdded[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                                    var node = _step.value.node;
+                                    var _ref11 = _step.value;
+                                    var node = _ref11.node;
 
                                     this.nodeAdded.push(node);
                                 }
@@ -2310,7 +2371,7 @@ var PowerEntity = function () {
     }, {
         key: 'sync',
         value: function sync() {
-            var callback = arguments.length <= 0 || arguments[0] === undefined ? function () {} : arguments[0];
+            var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : function () {};
 
             var promise = (0, _helper.promiseFactory)();
 
@@ -2330,9 +2391,9 @@ var PowerEntity = function () {
                 });
             }
 
-            entityController.onChangeData({ uri: entity.getUri(), adapter: this.customAdapter, callback: callback }).then(function (_ref10) {
-                var data = _ref10.data;
-                var response = _ref10.response;
+            entityController.onChangeData({ uri: entity.getUri(), adapter: this.customAdapter, callback: callback }).then(function (_ref12) {
+                var data = _ref12.data,
+                    response = _ref12.response;
 
                 entity.setData(data);
                 entity.setStatus(_constants.DATA_STATUS.synced);
@@ -2345,8 +2406,8 @@ var PowerEntity = function () {
                 }
 
                 promise.resolve(entity);
-            }).catch(function (_ref11) {
-                var response = _ref11.response;
+            }).catch(function (_ref13) {
+                var response = _ref13.response;
 
                 entity.setStatus(_constants.DATA_STATUS.error);
 
@@ -2365,8 +2426,8 @@ var PowerEntity = function () {
     }, {
         key: 'on',
         value: function on() {
-            var eventName = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
-            var callback = arguments.length <= 1 || arguments[1] === undefined ? function () {} : arguments[1];
+            var eventName = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
+            var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : function () {};
 
             this.eventManager.addEventListener(eventName, function (response) {
                 if (!response || !response.data || !response.data.entity) {
@@ -2393,7 +2454,7 @@ var PowerEntity = function () {
 
 exports.default = PowerEntity;
 
-},{"./config/constants.js":35,"./helper/helper":38}],31:[function(require,module,exports){
+},{"./config/constants.js":36,"./helper/helper":39}],31:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2422,27 +2483,27 @@ var AjaxAdapter = function (_AbstractHttpAdapter) {
 
         _classCallCheck(this, AjaxAdapter);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(AjaxAdapter).call(this, { url: url }));
+        return _possibleConstructorReturn(this, (AjaxAdapter.__proto__ || Object.getPrototypeOf(AjaxAdapter)).call(this, { url: url }));
     }
 
     _createClass(AjaxAdapter, [{
         key: 'createData',
         value: function createData() {
-            var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             return this.httpCall('post', data);
         }
     }, {
         key: 'readData',
         value: function readData() {
-            var params = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             return this.httpCall('get', params);
         }
     }, {
         key: 'updateData',
         value: function updateData() {
-            var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             return this.httpCall('post', data);
         }
@@ -2458,7 +2519,81 @@ var AjaxAdapter = function (_AbstractHttpAdapter) {
 
 exports.default = AjaxAdapter;
 
-},{"./abstract/AbstractHttpAdapter":33}],32:[function(require,module,exports){
+},{"./abstract/AbstractHttpAdapter":34}],32:[function(require,module,exports){
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _AbstractHttpAdapter2 = require('./abstract/AbstractHttpAdapter');
+
+var _AbstractHttpAdapter3 = _interopRequireDefault(_AbstractHttpAdapter2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var FormDataAdapter = function (_AbstractHttpAdapter) {
+    _inherits(FormDataAdapter, _AbstractHttpAdapter);
+
+    function FormDataAdapter(_ref) {
+        var url = _ref.url;
+
+        _classCallCheck(this, FormDataAdapter);
+
+        return _possibleConstructorReturn(this, (FormDataAdapter.__proto__ || Object.getPrototypeOf(FormDataAdapter)).call(this, { url: url }));
+    }
+
+    _createClass(FormDataAdapter, [{
+        key: 'createData',
+        value: function createData() {
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            return this.httpCall('post', this.makeFormData(data));
+        }
+    }, {
+        key: 'readData',
+        value: function readData() {
+            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            return this.httpCall('get', this.makeFormData(params));
+        }
+    }, {
+        key: 'updateData',
+        value: function updateData() {
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            return this.httpCall('post', this.makeFormData(data));
+        }
+    }, {
+        key: 'makeFormData',
+        value: function makeFormData() {
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            var formData = new FormData();
+
+            for (var key in data) {
+                var value = data[key];
+                formData.append(key, value);
+            }
+
+            return formData;
+        }
+    }]);
+
+    return FormDataAdapter;
+}(_AbstractHttpAdapter3.default);
+
+exports.default = FormDataAdapter;
+
+},{"./abstract/AbstractHttpAdapter":34}],33:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2473,8 +2608,8 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var AbstractAdapter = function () {
     function AbstractAdapter(_ref) {
-        var _ref$url = _ref.url;
-        var url = _ref$url === undefined ? '' : _ref$url;
+        var _ref$url = _ref.url,
+            url = _ref$url === undefined ? '' : _ref$url;
 
         _classCallCheck(this, AbstractAdapter);
 
@@ -2543,12 +2678,12 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterAction',
         value: function afterAction(_ref2, _ref3) {
-            var pendingName = _ref2.pendingName;
-            var successName = _ref2.successName;
-            var errorName = _ref2.errorName;
-            var node = _ref3.node;
-            var id = _ref3.id;
-            var error = _ref3.error;
+            var pendingName = _ref2.pendingName,
+                successName = _ref2.successName,
+                errorName = _ref2.errorName;
+            var node = _ref3.node,
+                id = _ref3.id,
+                error = _ref3.error;
 
             if (!error) {
                 this.results[successName].push({
@@ -2581,9 +2716,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterCreate',
         value: function afterCreate(_ref4) {
-            var node = _ref4.node;
-            var id = _ref4.id;
-            var error = _ref4.error;
+            var node = _ref4.node,
+                id = _ref4.id,
+                error = _ref4.error;
 
             return this.afterAction({ pendingName: 'pendingToCreate', successName: 'created', errorName: 'notCreated' }, { node: node, id: id, error: error });
         }
@@ -2595,9 +2730,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterRead',
         value: function afterRead(_ref5) {
-            var node = _ref5.node;
-            var id = _ref5.id;
-            var error = _ref5.error;
+            var node = _ref5.node,
+                id = _ref5.id,
+                error = _ref5.error;
 
             return this.afterAction({ pendingName: 'pendingToRead', successName: 'readed', errorName: 'notReaded' }, { node: node, id: id, error: error });
         }
@@ -2609,9 +2744,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterUpdate',
         value: function afterUpdate(_ref6) {
-            var node = _ref6.node;
-            var id = _ref6.id;
-            var error = _ref6.error;
+            var node = _ref6.node,
+                id = _ref6.id,
+                error = _ref6.error;
 
             return this.afterAction({ pendingName: 'pendingToUpdate', successName: 'updated', errorName: 'notUpdated' }, { node: node, id: id, error: error });
         }
@@ -2623,9 +2758,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterDelete',
         value: function afterDelete(_ref7) {
-            var node = _ref7.node;
-            var id = _ref7.id;
-            var error = _ref7.error;
+            var node = _ref7.node,
+                id = _ref7.id,
+                error = _ref7.error;
 
             return this.afterAction({ pendingName: 'pendingToDelete', successName: 'deleted', errorName: 'notDeleted' }, { node: node, id: id, error: error });
         }
@@ -2637,9 +2772,9 @@ var AbstractAdapter = function () {
     }, {
         key: 'afterPush',
         value: function afterPush(_ref8) {
-            var node = _ref8.node;
-            var id = _ref8.id;
-            var error = _ref8.error;
+            var node = _ref8.node,
+                id = _ref8.id,
+                error = _ref8.error;
 
             return this.afterAction({ pendingName: 'pendingToPush', successName: 'pushed', errorName: 'notPushed' }, { node: node, id: id, error: error });
         }
@@ -2655,7 +2790,7 @@ var AbstractAdapter = function () {
 
 exports.default = AbstractAdapter;
 
-},{"../../helper/helper":38}],33:[function(require,module,exports){
+},{"../../helper/helper":39}],34:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2688,7 +2823,7 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
 
         _classCallCheck(this, AbstractHttpAdapter);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(AbstractHttpAdapter).call(this, { url: url }));
+        return _possibleConstructorReturn(this, (AbstractHttpAdapter.__proto__ || Object.getPrototypeOf(AbstractHttpAdapter)).call(this, { url: url }));
     }
 
     _createClass(AbstractHttpAdapter, [{
@@ -2720,7 +2855,7 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
 
 exports.default = AbstractHttpAdapter;
 
-},{"./AbstractAdapter":32,"axios":1}],34:[function(require,module,exports){
+},{"./AbstractAdapter":33,"axios":1}],35:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2731,13 +2866,17 @@ var _AjaxAdapter = require('./AjaxAdapter');
 
 var _AjaxAdapter2 = _interopRequireDefault(_AjaxAdapter);
 
+var _FormDataAdapter = require('./FormDataAdapter');
+
+var _FormDataAdapter2 = _interopRequireDefault(_FormDataAdapter);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //import FirebaseAdapter from './FirebaseAdapter';
 
-exports.default = { AjaxAdapter: _AjaxAdapter2.default };
+exports.default = { AjaxAdapter: _AjaxAdapter2.default, FormDataAdapter: _FormDataAdapter2.default };
 
-},{"./AjaxAdapter":31}],35:[function(require,module,exports){
+},{"./AjaxAdapter":31,"./FormDataAdapter":32}],36:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2775,14 +2914,14 @@ var EVENT_TYPE = exports.EVENT_TYPE = {
     add_error: 'add_error'
 };
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -2792,10 +2931,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var BaseEntity = function () {
     function BaseEntity(_ref) {
-        var uri = _ref.uri;
-        var name = _ref.name;
-        var _ref$fixedParams = _ref.fixedParams;
-        var fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams;
+        var uri = _ref.uri,
+            name = _ref.name,
+            _ref$fixedParams = _ref.fixedParams,
+            fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams;
 
         _classCallCheck(this, BaseEntity);
 
@@ -2841,7 +2980,7 @@ var BaseEntity = function () {
     }, {
         key: 'setUri',
         value: function setUri() {
-            var uri = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+            var uri = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
             if (!uri || typeof uri !== 'string') return this.uri;
             return this.uri = uri;
@@ -2854,7 +2993,7 @@ var BaseEntity = function () {
     }, {
         key: 'setFixedParams',
         value: function setFixedParams() {
-            var params = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
             if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) !== 'object' || typeof params.length !== 'undefined') {
                 return this.fixedParams;
@@ -2873,7 +3012,7 @@ var BaseEntity = function () {
     }, {
         key: 'setActionParams',
         value: function setActionParams() {
-            var actionParams = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var actionParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             this.actionParams = actionParams;
             this.mergeParams();
@@ -2908,7 +3047,7 @@ var BaseEntity = function () {
     }, {
         key: 'setData',
         value: function setData() {
-            var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             this.data = data;
             this.setStatus(_constants.DATA_STATUS.modified);
@@ -2951,7 +3090,7 @@ var BaseEntity = function () {
 
 exports.default = BaseEntity;
 
-},{"../config/constants.js":35}],37:[function(require,module,exports){
+},{"../config/constants.js":36}],38:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2966,7 +3105,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 exports.default = { BaseEntity: _BaseEntity2.default };
 
-},{"./BaseEntity":36}],38:[function(require,module,exports){
+},{"./BaseEntity":37}],39:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -2994,8 +3133,8 @@ function promiseFactory() {
 }
 
 function getEventsName(_ref) {
-    var method = _ref.method;
-    var dataStatus = _ref.dataStatus;
+    var method = _ref.method,
+        dataStatus = _ref.dataStatus;
 
     var prefix = method;
 
@@ -3065,7 +3204,7 @@ function getCurrentPosition(callback) {
     }
 }
 
-},{"../config/constants":35}],39:[function(require,module,exports){
+},{"../config/constants":36}],40:[function(require,module,exports){
 'use strict';
 
 Object.defineProperty(exports, "__esModule", {
@@ -3116,4 +3255,4 @@ exports.PowerEntity = _PowerEntity2.default;
 exports.adapters = _adapters2.default;
 exports.entities = _entities2.default;
 
-},{"./Apiface":25,"./EntityContainer":26,"./EntityController":27,"./EntityFactory":28,"./EventManager":29,"./PowerEntity":30,"./adapters/adapters":34,"./entities/entities":37}]},{},[24]);
+},{"./Apiface":25,"./EntityContainer":26,"./EntityController":27,"./EntityFactory":28,"./EventManager":29,"./PowerEntity":30,"./adapters/adapters":35,"./entities/entities":38}]},{},[24]);

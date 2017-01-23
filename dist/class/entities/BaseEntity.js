@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -14,10 +14,10 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 var BaseEntity = function () {
     function BaseEntity(_ref) {
-        var uri = _ref.uri;
-        var name = _ref.name;
-        var _ref$fixedParams = _ref.fixedParams;
-        var fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams;
+        var uri = _ref.uri,
+            name = _ref.name,
+            _ref$fixedParams = _ref.fixedParams,
+            fixedParams = _ref$fixedParams === undefined ? {} : _ref$fixedParams;
 
         _classCallCheck(this, BaseEntity);
 
@@ -63,7 +63,7 @@ var BaseEntity = function () {
     }, {
         key: 'setUri',
         value: function setUri() {
-            var uri = arguments.length <= 0 || arguments[0] === undefined ? '' : arguments[0];
+            var uri = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
 
             if (!uri || typeof uri !== 'string') return this.uri;
             return this.uri = uri;
@@ -76,7 +76,7 @@ var BaseEntity = function () {
     }, {
         key: 'setFixedParams',
         value: function setFixedParams() {
-            var params = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
             if ((typeof params === 'undefined' ? 'undefined' : _typeof(params)) !== 'object' || typeof params.length !== 'undefined') {
                 return this.fixedParams;
@@ -95,7 +95,7 @@ var BaseEntity = function () {
     }, {
         key: 'setActionParams',
         value: function setActionParams() {
-            var actionParams = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var actionParams = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             this.actionParams = actionParams;
             this.mergeParams();
@@ -130,7 +130,7 @@ var BaseEntity = function () {
     }, {
         key: 'setData',
         value: function setData() {
-            var data = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
             this.data = data;
             this.setStatus(_constants.DATA_STATUS.modified);

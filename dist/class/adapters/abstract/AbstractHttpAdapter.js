@@ -30,7 +30,7 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
 
         _classCallCheck(this, AbstractHttpAdapter);
 
-        return _possibleConstructorReturn(this, Object.getPrototypeOf(AbstractHttpAdapter).call(this, { url: url }));
+        return _possibleConstructorReturn(this, (AbstractHttpAdapter.__proto__ || Object.getPrototypeOf(AbstractHttpAdapter)).call(this, { url: url }));
     }
 
     _createClass(AbstractHttpAdapter, [{

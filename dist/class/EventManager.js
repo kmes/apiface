@@ -49,7 +49,7 @@ var EventManager = function () {
     _createClass(EventManager, [{
         key: 'addEventListener',
         value: function addEventListener(evtName, callback) {
-            var priority = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+            var priority = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
             var errorMsg = '';
             if (!evtName || typeof evtName !== 'string') errorMsg = 'Event\'s name is not defined.';
@@ -75,7 +75,7 @@ var EventManager = function () {
     }, {
         key: 'getTruePriority',
         value: function getTruePriority(evtName) {
-            var priority = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var priority = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             if (!this.listeners[evtName]) return false;
 
@@ -113,7 +113,7 @@ var EventManager = function () {
     }, {
         key: 'trigger',
         value: function trigger(evtName) {
-            var data = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+            var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
             if (!this.listeners[evtName]) return false;
 
