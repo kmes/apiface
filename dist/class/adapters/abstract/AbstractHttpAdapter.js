@@ -45,7 +45,7 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
             console.log('httpCall', arguments);
 
             var newParams = null;
-            if (params instanceof FormData) {
+            if (params instanceof FormData && method != 'get') {
                 newParams = params;
                 for (var name in this.getParams()) {
                     var value = this.getParams()[name];
