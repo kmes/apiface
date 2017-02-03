@@ -6,13 +6,13 @@ export default class FormDataAdapter extends AbstractHttpAdapter {
     }
 
     createData( data = {} ) {
-        return this.httpCall( 'post', this.makeFormData(data) );
+        return this.httpCall( 'post', this.makeFormData(data), { headers: {'Content-Type': 'multipart/form-data'} } );
     }
     readData( params = {} ) {
-        return this.httpCall( 'get', this.makeFormData(params) );
+        return this.httpCall( 'get', this.makeFormData(params), { headers: {'Content-Type': 'multipart/form-data'} } );
     }
     updateData( data = {} ) {
-        return this.httpCall( 'post', this.makeFormData(data) );
+        return this.httpCall( 'post', this.makeFormData(data), { headers: {'Content-Type': 'multipart/form-data'} } );
     }
 
     makeFormData( data = {} ) {
