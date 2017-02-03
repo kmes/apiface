@@ -2861,12 +2861,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AbstractHttpAdapter = function (_AbstractAdapter) {
     _inherits(AbstractHttpAdapter, _AbstractAdapter);
 
-    function AbstractHttpAdapter(_ref) {
-        var url = _ref.url;
-
+    function AbstractHttpAdapter(config) {
         _classCallCheck(this, AbstractHttpAdapter);
 
-        return _possibleConstructorReturn(this, (AbstractHttpAdapter.__proto__ || Object.getPrototypeOf(AbstractHttpAdapter)).call(this, { url: url }));
+        return _possibleConstructorReturn(this, (AbstractHttpAdapter.__proto__ || Object.getPrototypeOf(AbstractHttpAdapter)).call(this, config));
     }
 
     _createClass(AbstractHttpAdapter, [{

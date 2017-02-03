@@ -3,8 +3,8 @@ import AbstractAdapter from './AbstractAdapter';
 import axios from 'axios';
 
 export default class AbstractHttpAdapter extends AbstractAdapter {
-    constructor({ url }) {
-        super({ url });
+    constructor( config ) {
+        super( config );
     }
 
     httpCall( method, params, config = {} ) {
