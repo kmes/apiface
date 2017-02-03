@@ -12,14 +12,26 @@ export default class AbstractHttpAdapter extends AbstractAdapter {
 
         console.log('httpCall', arguments);
 
+        let newParams = null;
+        if( params instanceof FormData ) {
+            newParams = params;
+            for( let name in this.getParams() ) {
+                let value = this.getParams()[name];
+                newParams.append( name, value );
+            }
+        }
+        else {
+            newParams = { ...this.getParams(), ...params };
+        }
+
         let data = {};
         if( method == 'get') {
             data = {
-                params: { ...this.getParams(), ...params }
+                params: newParams
             };
         }
         else {
-            data = { ...this.getParams(), ...params };
+            data = newParams;
         }
 
         axios[ method ]( this.getUrl(), data, config )
