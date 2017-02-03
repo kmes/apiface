@@ -13,7 +13,7 @@ export default class AbstractHttpAdapter extends AbstractAdapter {
         console.log('httpCall', arguments);
 
         let newParams = null;
-        if( params instanceof FormData ) {
+        if( params instanceof FormData && method != 'get' ) {
             newParams = params;
             for( let name in this.getParams() ) {
                 let value = this.getParams()[name];
@@ -26,15 +26,9 @@ export default class AbstractHttpAdapter extends AbstractAdapter {
 
         let data = {};
         if( method == 'get') {
-            if( params instanceof FormData ) {
-                data = new FormData();
-                data.append('params', newParams);
-            }
-            else {
-                data = {
-                    params: newParams
-                };
-            }
+            data = {
+                params: newParams
+            };
         }
         else {
             data = newParams;
