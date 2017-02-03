@@ -26,9 +26,15 @@ export default class AbstractHttpAdapter extends AbstractAdapter {
 
         let data = {};
         if( method == 'get') {
-            data = {
-                params: newParams
-            };
+            if( params instanceof FormData ) {
+                data = new FormData();
+                data.append('params', newParams);
+            }
+            else {
+                data = {
+                    params: newParams
+                };
+            }
         }
         else {
             data = newParams;
