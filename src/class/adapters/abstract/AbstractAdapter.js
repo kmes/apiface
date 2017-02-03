@@ -40,11 +40,20 @@ export default class AbstractAdapter {
         return promiseFactory();
     }
 
+    getBaseUrl() {
+        return this.baseUrl;
+    }
+    setBaseUrl( baseUrl ) {
+        this.baseUrl = baseUrl;
+        return this;
+    }
+
     getUri() {
         return this.uri;
     }
     setUri( uri ) {
         this.uri = uri;
+        return this;
     }
 
     getUrl() {
