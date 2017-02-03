@@ -8,7 +8,7 @@ export default class EntityController {
         if( !adapter ) adapter = this.adapter;
 
         adapter.setUri( uri );
-        adapter.setParams( params );
+        //adapter.setParams( params );
         adapter.resetResults();
 
         return adapter;
