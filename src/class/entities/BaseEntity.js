@@ -64,7 +64,7 @@ export default class BaseEntity {
         return this.params;
     }
     mergeParams() {
-        return this.params = Object.assign( {}, this.getFixedParams(), this.getActionParams() );
+        return this.params = { ...this.getFixedParams(), ...this.getActionParams() };
     }
 
     getStatus() {

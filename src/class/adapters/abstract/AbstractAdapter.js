@@ -1,10 +1,10 @@
 import { promiseFactory } from '../../helper/helper';
 
 export default class AbstractAdapter {
-    constructor({ url = '' }) {
+    constructor({ url = '', params = {} }) {
         this.baseUrl = url;
         this.uri = '';
-
+        this.params = params;
         this.results = {};
         this.resetResults();
     }
@@ -32,6 +32,16 @@ export default class AbstractAdapter {
             notPushed: []
         };
     }
+
+    getParams() {
+        return this.params;
+    }
+    setParams( params = {} ) {
+        this.params = params;
+
+        return this;
+    }
+
     getResults() {
         return this.results;
     }

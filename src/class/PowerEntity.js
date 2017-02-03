@@ -66,6 +66,17 @@ export default class PowerEntity {
         this.nodeAdded.push( node );
     }
 
+    getFixedParams() {
+        return this.getEntity().getFixedParams();
+    }
+    setFixedParams( params ) {
+        if( params ) {
+            this.getEntity().setFixedParams( params );
+        }
+
+        return this;
+    }
+
     getNodeAdded() {
         return this.nodeAdded;
     }

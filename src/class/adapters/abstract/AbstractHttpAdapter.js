@@ -8,11 +8,21 @@ export default class AbstractHttpAdapter extends AbstractAdapter {
     }
 
     httpCall( method, params, config = {} ) {
-        var promise = this.getPromise();
+        let promise = this.getPromise();
 
         console.log('httpCall', arguments);
 
-        axios[ method ]( this.getUrl(), params, config )
+        let data = {};
+        if( method == 'get') {
+            data = {
+                params: { ...this.getParams(), ...params }
+            };
+        }
+        else {
+            data = { ...this.getParams(), ...params };
+        }
+
+        axios[ method ]( this.getUrl(), data, config )
             .then(function( resp ) {
                 console.log('then', resp);
                 if( resp.status == 200 ) {

@@ -8,8 +8,8 @@ export default class AjaxAdapter extends AbstractHttpAdapter {
     createData( data = {} ) {
         return this.httpCall( 'post', data );
     }
-    readData( params = {} ) {
-        return this.httpCall( 'get', params );
+    readData( data = {} ) {
+        return this.httpCall( 'get', data );
     }
     updateData( data = {} ) {
         return this.httpCall( 'post', data );
