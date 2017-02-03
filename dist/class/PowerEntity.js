@@ -89,6 +89,8 @@ var PowerEntity = function () {
             }
 
             this.getEntity().setData(data);
+
+            return this;
         }
     }, {
         key: 'addData',

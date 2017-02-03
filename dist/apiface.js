@@ -2118,6 +2118,8 @@ var PowerEntity = function () {
             }
 
             this.getEntity().setData(data);
+
+            return this;
         }
     }, {
         key: 'addData',
@@ -2556,21 +2558,21 @@ var FormDataAdapter = function (_AbstractHttpAdapter) {
         value: function createData() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('post', this.makeFormData(data));
+            return this.httpCall('post', this.makeFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } });
         }
     }, {
         key: 'readData',
         value: function readData() {
             var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('get', this.makeFormData(params));
+            return this.httpCall('get', this.makeFormData(params), { headers: { 'Content-Type': 'multipart/form-data' } });
         }
     }, {
         key: 'updateData',
         value: function updateData() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('post', this.makeFormData(data));
+            return this.httpCall('post', this.makeFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } });
         }
     }, {
         key: 'makeFormData',
@@ -2656,6 +2658,17 @@ var AbstractAdapter = function () {
             return (0, _helper.promiseFactory)();
         }
     }, {
+        key: 'getBaseUrl',
+        value: function getBaseUrl() {
+            return this.baseUrl;
+        }
+    }, {
+        key: 'setBaseUrl',
+        value: function setBaseUrl(baseUrl) {
+            this.baseUrl = baseUrl;
+            return this;
+        }
+    }, {
         key: 'getUri',
         value: function getUri() {
             return this.uri;
@@ -2664,6 +2677,7 @@ var AbstractAdapter = function () {
         key: 'setUri',
         value: function setUri(uri) {
             this.uri = uri;
+            return this;
         }
     }, {
         key: 'getUrl',
@@ -2829,11 +2843,13 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
     _createClass(AbstractHttpAdapter, [{
         key: 'httpCall',
         value: function httpCall(method, params) {
+            var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
             var promise = this.getPromise();
 
             console.log('httpCall', arguments);
 
-            _axios2.default[method](this.getUrl(), { params: params }).then(function (resp) {
+            _axios2.default[method](this.getUrl(), params, config).then(function (resp) {
                 console.log('then', resp);
                 if (resp.status == 200) {
                     console.log('resolve');

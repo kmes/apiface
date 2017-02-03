@@ -36,11 +36,13 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
     _createClass(AbstractHttpAdapter, [{
         key: 'httpCall',
         value: function httpCall(method, params) {
+            var config = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
             var promise = this.getPromise();
 
             console.log('httpCall', arguments);
 
-            _axios2.default[method](this.getUrl(), { params: params }).then(function (resp) {
+            _axios2.default[method](this.getUrl(), params, config).then(function (resp) {
                 console.log('then', resp);
                 if (resp.status == 200) {
                     console.log('resolve');

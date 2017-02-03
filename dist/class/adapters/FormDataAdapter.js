@@ -34,21 +34,21 @@ var FormDataAdapter = function (_AbstractHttpAdapter) {
         value: function createData() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('post', this.makeFormData(data));
+            return this.httpCall('post', this.makeFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } });
         }
     }, {
         key: 'readData',
         value: function readData() {
             var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('get', this.makeFormData(params));
+            return this.httpCall('get', this.makeFormData(params), { headers: { 'Content-Type': 'multipart/form-data' } });
         }
     }, {
         key: 'updateData',
         value: function updateData() {
             var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('post', this.makeFormData(data));
+            return this.httpCall('post', this.makeFormData(data), { headers: { 'Content-Type': 'multipart/form-data' } });
         }
     }, {
         key: 'makeFormData',

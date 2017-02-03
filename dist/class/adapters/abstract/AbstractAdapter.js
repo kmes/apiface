@@ -60,6 +60,17 @@ var AbstractAdapter = function () {
             return (0, _helper.promiseFactory)();
         }
     }, {
+        key: 'getBaseUrl',
+        value: function getBaseUrl() {
+            return this.baseUrl;
+        }
+    }, {
+        key: 'setBaseUrl',
+        value: function setBaseUrl(baseUrl) {
+            this.baseUrl = baseUrl;
+            return this;
+        }
+    }, {
         key: 'getUri',
         value: function getUri() {
             return this.uri;
@@ -68,6 +79,7 @@ var AbstractAdapter = function () {
         key: 'setUri',
         value: function setUri(uri) {
             this.uri = uri;
+            return this;
         }
     }, {
         key: 'getUrl',
