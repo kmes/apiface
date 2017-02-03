@@ -1735,6 +1735,7 @@ var EntityController = function () {
             if (!adapter) adapter = this.adapter;
 
             adapter.setUri(uri);
+            adapter.setParams(params);
             adapter.resetResults();
 
             return adapter;
@@ -2131,6 +2132,20 @@ var PowerEntity = function () {
             this.nodeAdded.push(node);
         }
     }, {
+        key: 'getFixedParams',
+        value: function getFixedParams() {
+            return this.getEntity().getFixedParams();
+        }
+    }, {
+        key: 'setFixedParams',
+        value: function setFixedParams(params) {
+            if (params) {
+                this.getEntity().setFixedParams(params);
+            }
+
+            return this;
+        }
+    }, {
         key: 'getNodeAdded',
         value: function getNodeAdded() {
             return this.nodeAdded;
@@ -2498,9 +2513,9 @@ var AjaxAdapter = function (_AbstractHttpAdapter) {
     }, {
         key: 'readData',
         value: function readData() {
-            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('get', params);
+            return this.httpCall('get', data);
         }
     }, {
         key: 'updateData',
@@ -2611,13 +2626,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var AbstractAdapter = function () {
     function AbstractAdapter(_ref) {
         var _ref$url = _ref.url,
-            url = _ref$url === undefined ? '' : _ref$url;
+            url = _ref$url === undefined ? '' : _ref$url,
+            _ref$params = _ref.params,
+            params = _ref$params === undefined ? {} : _ref$params;
 
         _classCallCheck(this, AbstractAdapter);
 
         this.baseUrl = url;
         this.uri = '';
-
+        this.params = params;
         this.results = {};
         this.resetResults();
     }
@@ -2646,6 +2663,20 @@ var AbstractAdapter = function () {
                 pushed: [],
                 notPushed: []
             };
+        }
+    }, {
+        key: 'getParams',
+        value: function getParams() {
+            return this.params;
+        }
+    }, {
+        key: 'setParams',
+        value: function setParams() {
+            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            this.params = params;
+
+            return this;
         }
     }, {
         key: 'getResults',
@@ -2811,6 +2842,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _AbstractAdapter2 = require('./AbstractAdapter');
@@ -2849,7 +2882,16 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
 
             console.log('httpCall', arguments);
 
-            _axios2.default[method](this.getUrl(), params, config).then(function (resp) {
+            var data = {};
+            if (method == 'get') {
+                data = {
+                    params: _extends({}, this.getParams(), params)
+                };
+            } else {
+                data = _extends({}, this.getParams(), params);
+            }
+
+            _axios2.default[method](this.getUrl(), data, config).then(function (resp) {
                 console.log('then', resp);
                 if (resp.status == 200) {
                     console.log('resolve');
@@ -2936,6 +2978,8 @@ var EVENT_TYPE = exports.EVENT_TYPE = {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
@@ -3043,7 +3087,7 @@ var BaseEntity = function () {
     }, {
         key: 'mergeParams',
         value: function mergeParams() {
-            return this.params = Object.assign({}, this.getFixedParams(), this.getActionParams());
+            return this.params = _extends({}, this.getFixedParams(), this.getActionParams());
         }
     }, {
         key: 'getStatus',

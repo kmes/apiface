@@ -13,13 +13,15 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var AbstractAdapter = function () {
     function AbstractAdapter(_ref) {
         var _ref$url = _ref.url,
-            url = _ref$url === undefined ? '' : _ref$url;
+            url = _ref$url === undefined ? '' : _ref$url,
+            _ref$params = _ref.params,
+            params = _ref$params === undefined ? {} : _ref$params;
 
         _classCallCheck(this, AbstractAdapter);
 
         this.baseUrl = url;
         this.uri = '';
-
+        this.params = params;
         this.results = {};
         this.resetResults();
     }
@@ -48,6 +50,20 @@ var AbstractAdapter = function () {
                 pushed: [],
                 notPushed: []
             };
+        }
+    }, {
+        key: 'getParams',
+        value: function getParams() {
+            return this.params;
+        }
+    }, {
+        key: 'setParams',
+        value: function setParams() {
+            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+            this.params = params;
+
+            return this;
         }
     }, {
         key: 'getResults',

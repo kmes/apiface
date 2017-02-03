@@ -102,6 +102,20 @@ var PowerEntity = function () {
             this.nodeAdded.push(node);
         }
     }, {
+        key: 'getFixedParams',
+        value: function getFixedParams() {
+            return this.getEntity().getFixedParams();
+        }
+    }, {
+        key: 'setFixedParams',
+        value: function setFixedParams(params) {
+            if (params) {
+                this.getEntity().setFixedParams(params);
+            }
+
+            return this;
+        }
+    }, {
         key: 'getNodeAdded',
         value: function getNodeAdded() {
             return this.nodeAdded;

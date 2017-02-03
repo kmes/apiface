@@ -30,6 +30,7 @@ var EntityController = function () {
             if (!adapter) adapter = this.adapter;
 
             adapter.setUri(uri);
+            adapter.setParams(params);
             adapter.resetResults();
 
             return adapter;

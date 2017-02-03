@@ -4,6 +4,8 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 var _AbstractAdapter2 = require('./AbstractAdapter');
@@ -42,7 +44,16 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
 
             console.log('httpCall', arguments);
 
-            _axios2.default[method](this.getUrl(), params, config).then(function (resp) {
+            var data = {};
+            if (method == 'get') {
+                data = {
+                    params: _extends({}, this.getParams(), params)
+                };
+            } else {
+                data = _extends({}, this.getParams(), params);
+            }
+
+            _axios2.default[method](this.getUrl(), data, config).then(function (resp) {
                 console.log('then', resp);
                 if (resp.status == 200) {
                     console.log('resolve');

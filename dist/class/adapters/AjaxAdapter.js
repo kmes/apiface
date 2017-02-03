@@ -39,9 +39,9 @@ var AjaxAdapter = function (_AbstractHttpAdapter) {
     }, {
         key: 'readData',
         value: function readData() {
-            var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+            var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-            return this.httpCall('get', params);
+            return this.httpCall('get', data);
         }
     }, {
         key: 'updateData',
