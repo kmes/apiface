@@ -1,8 +1,8 @@
 import AbstractHttpAdapter from './abstract/AbstractHttpAdapter';
 
 export default class FormDataAdapter extends AbstractHttpAdapter {
-    constructor({ url }) {
-        super({ url });
+    constructor( config ) {
+        super( config );
     }
 
     createData( data = {} ) {

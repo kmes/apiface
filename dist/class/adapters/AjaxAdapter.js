@@ -21,12 +21,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var AjaxAdapter = function (_AbstractHttpAdapter) {
     _inherits(AjaxAdapter, _AbstractHttpAdapter);
 
-    function AjaxAdapter(_ref) {
-        var url = _ref.url;
-
+    function AjaxAdapter(config) {
         _classCallCheck(this, AjaxAdapter);
 
-        return _possibleConstructorReturn(this, (AjaxAdapter.__proto__ || Object.getPrototypeOf(AjaxAdapter)).call(this, { url: url }));
+        return _possibleConstructorReturn(this, (AjaxAdapter.__proto__ || Object.getPrototypeOf(AjaxAdapter)).call(this, config));
     }
 
     _createClass(AjaxAdapter, [{

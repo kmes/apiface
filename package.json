@@ -1,6 +1,6 @@
 {
   "name": "apiface",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "",
   "main": "dist/class/main.js",
   "repository": {
