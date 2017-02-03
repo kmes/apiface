@@ -55,6 +55,8 @@ export default class PowerEntity {
         }
 
         this.getEntity().setData( data );
+
+        return this;
     }
     addData( node ) {
         if( !node ) return false;
