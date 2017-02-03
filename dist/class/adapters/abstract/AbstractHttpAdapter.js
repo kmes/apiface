@@ -44,13 +44,24 @@ var AbstractHttpAdapter = function (_AbstractAdapter) {
 
             console.log('httpCall', arguments);
 
+            var newParams = null;
+            if (params instanceof FormData) {
+                newParams = params;
+                for (var name in this.getParams()) {
+                    var value = this.getParams()[name];
+                    newParams.append(name, value);
+                }
+            } else {
+                newParams = _extends({}, this.getParams(), params);
+            }
+
             var data = {};
             if (method == 'get') {
                 data = {
-                    params: _extends({}, this.getParams(), params)
+                    params: newParams
                 };
             } else {
-                data = _extends({}, this.getParams(), params);
+                data = newParams;
             }
 
             _axios2.default[method](this.getUrl(), data, config).then(function (resp) {
