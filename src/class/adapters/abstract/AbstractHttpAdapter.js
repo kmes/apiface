@@ -7,12 +7,12 @@ export default class AbstractHttpAdapter extends AbstractAdapter {
         super({ url });
     }
 
-    httpCall( method, params ) {
+    httpCall( method, params, config = {} ) {
         var promise = this.getPromise();
 
         console.log('httpCall', arguments);
 
-        axios[ method ]( this.getUrl(), { params: params } )
+        axios[ method ]( this.getUrl(), params, config )
             .then(function( resp ) {
                 console.log('then', resp);
                 if( resp.status == 200 ) {
