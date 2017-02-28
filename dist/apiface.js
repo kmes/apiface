@@ -3143,6 +3143,7 @@ var BaseEntity = function () {
         key: 'set',
         value: function set(field, value) {
             var data = this.getData();
+            if (data === null) this.setData({});
             if ((typeof data === 'undefined' ? 'undefined' : _typeof(data)) !== 'object') return false;
             data[field] = value;
 
