@@ -104,6 +104,7 @@ export default class BaseEntity {
     }
     set( field, value ) {
         let data = this.getData();
+        if( data === null ) this.setData({});
         if( typeof data !== 'object' ) return false;
         data[ field ] = value;
 
